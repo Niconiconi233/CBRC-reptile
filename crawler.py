@@ -2,7 +2,8 @@ import requests
 import json
 import logging
 import time
-from config import HEADER, URL
+from config import HEADER, URL, proxies
+from func import random_sleep
 
 
 class Crawler:
@@ -13,11 +14,13 @@ class Crawler:
         self.url = URL[place]
         self.array = []
         self.count = 0
+        logging.basicConfig(level=logging.INFO)
 
     def starts(self):
         self.__preStart()
-        for i in range(self.start, self.end):
+        for i in range(self.start, self.end + 1):
             self.array.append(self.__download(i))
+            random_sleep()
         self.__postStart()
         return self.array
 
@@ -33,16 +36,20 @@ class Crawler:
             logging.warning("----------warn----------")
             logging.warning("total count:" + str(totalCount) + " but download count:" + str(len(self.array)))
 
+    def getPageCount(self):
+        return self.__getPageCount()
+
     def __getPageCount(self):
         obj = self.__download(1)
         if obj is not None:
-            logging.info(obj["data"]["total"])
+            count = obj["data"]["total"]
+            return count
         else:
             logging.error("error to get count")
 
     def __download(self, page):
         url = self.url.format(page)
-        html = requests.get(url, self.header)
+        html = requests.get(url, self.header, proxies=proxies)
         if html.status_code == 200:
             jsonObj = json.loads(html.content)
             return jsonObj

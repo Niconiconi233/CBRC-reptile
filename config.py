@@ -12,3 +12,7 @@ HEADER = {
 URL = {
     "yunnan": "http://www.cbirc.gov.cn/cbircweb/DocInfo/SelectDocItemByItemPId?itemId=1954&pageSize=18&pageIndex={0}"
 }
+
+proxies = {
+
+}
