@@ -7,10 +7,10 @@ class MongoClient:
         self.col = self.db["CBRC-DATA"]
     
     def insertOne(self, oneData):
-        x = self.db.insert_one(oneData)
+        x = self.col.insert_one(oneData)
         return x
     
     def insertMany(self, datas):
-        x = self.db.insert_many(datas)
+        x = self.col.insert_many(datas)
         return x
         

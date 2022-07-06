@@ -24,7 +24,7 @@ class MyThreadPool:
     def starts(self, func):
         with ThreadPoolExecutor(max_workers=self.workerCount) as executor:
             task_list = []
-            for i in range(self.workerCount+1):
+            for i in range(self.workerCount):
                 job = executor.submit(self.__runner, func)
                 print(job)
                 task_list.append(job)
