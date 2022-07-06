@@ -1,7 +1,6 @@
 import requests
 import json
 import logging
-import time
 from config import HEADER, URL, proxies
 from func import random_sleep
 
@@ -29,7 +28,7 @@ class Crawler:
         logging.info("---------start----------")
 
     def __postStart(self):
-        totalCount = (self.end - self.start)
+        totalCount = (self.end - self.start + 1)
         if len(self.array) == totalCount:
             logging.info("--------------end-------------")
         else:
