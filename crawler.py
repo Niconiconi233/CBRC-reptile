@@ -14,10 +14,13 @@ class Crawler:
         self.array = []
         self.count = 0
         logging.basicConfig(level=logging.INFO)
+        if self.start == self.end:
+            self.end += 1
 
+    #[start, end)
     def starts(self):
         self.__preStart()
-        for i in range(self.start, self.end + 1):
+        for i in range(self.start, self.end):
             self.array.append(self.__download(i))
             random_sleep()
         self.__postStart()
@@ -28,7 +31,7 @@ class Crawler:
         logging.info("---------start----------")
 
     def __postStart(self):
-        totalCount = (self.end - self.start + 1)
+        totalCount = (self.end - self.start)
         if len(self.array) == totalCount:
             logging.info("--------------end-------------")
         else:

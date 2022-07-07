@@ -1,4 +1,5 @@
 import pymongo
+import logging
 
 class MongoClient:
     def __init__(self) -> None:
@@ -13,4 +14,14 @@ class MongoClient:
     def insertMany(self, datas):
         x = self.col.insert_many(datas)
         return x
-        
+
+    def getColCount(self):
+        return self.col.count()
+
+    def findAndInsert(self, data):
+        query = {"docId": data["docId"]}
+        doc = self.col.find(query)
+        if doc.count() > 0:
+            logging.info("-------数据存在 skip---------")
+        else:
+            self.col.insert_one(data)

@@ -1,7 +1,6 @@
+import math
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import cpu_count
-import math
-import queue
 
 
 class MyThreadPool:
@@ -26,7 +25,6 @@ class MyThreadPool:
             task_list = []
             for i in range(self.workerCount):
                 job = executor.submit(self.__runner, func)
-                print(job)
                 task_list.append(job)
 
             for future in as_completed(task_list):
