@@ -7,7 +7,7 @@ from mongo import MongoClient
 
 count = 0
 page = 0
-cpuCount = 3
+cpuCount = 2
 task = queue.Queue()
 
 
