@@ -25,3 +25,11 @@ class MongoClient:
             logging.info("-------数据存在 skip---------")
         else:
             self.col.insert_one(data)
+
+    def getOne(self, query):
+        self.col.find(query)
+        return self.col.find(query)
+
+    def getAll(self):
+        doc = self.col.find(None)
+        return doc

@@ -56,6 +56,8 @@ def judgeToDownload():
     if dbcount == count:
         logging.info("本地数据与远端数据一致，跳过")
     else:
+        logging.info("dbcount" + str(dbcount) + "pageCount:" + str(count))
+        count = count - dbcount
         calc()
         t = MyThreadPool(cpuCount, task, cpuCount)
         t.starts(func)
@@ -65,13 +67,21 @@ def judgeToDownload():
         for i in range(1, len(r)):
             res_array.extend(r[i][0])
 
-        #判断是增量还是全量
-        if count - dbcount > 18:
-            logging.info("---------save to mongo---------")
+        if dbcount == 0:
             saveToMongo(res_array)
         else:
-            logging.info("---------update to mongo----------")
             updateToMongo(res_array)
+
+
+def getListInfo():
+    m = MongoClient()
+    a = m.getAll()
+    print(a.count())
+    for i in a:
+        print(i["docId"])
+
+
+
 
 
 def func(tuple):
@@ -81,7 +91,8 @@ def func(tuple):
 
 
 def main():
-    judgeToDownload()
+#    judgeToDownload()
+  getListInfo()
 
 
 
