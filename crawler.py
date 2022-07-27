@@ -2,35 +2,46 @@ from tkinter.messagebox import NO
 import requests
 import json
 import logging
-from config import HEADER, URL, proxies, RETRY
+from config import HEADER, proxies, RETRY
 from func import random_sleep
 
 
 class Crawler:
-    def __init__(self, start = 1, end = 1, place = "yunnan"):
-        self.start = start
-        self.end = end
+    def __init__(self, url):
         self.header = HEADER
-        self.url = URL[place]
+        self.url = url
         self.array = []
         self.errorurl = []
         self.count = 0
         self.retry = 0
         logging.basicConfig(level=logging.INFO)
-        if self.start == self.end:
-            self.end += 1
 
+
+    #针对范围下载
     #[start, end)
-    def starts(self):
+    def downloadByRange(self, start, end):
         self.__preStart()
-        for i in range(self.start, self.end):
+        if start == end:
+            end += 1
+        for i in range(start, end):
             res = self.__downloadi(i)
             if res != None:
                 self.array.append(res)
-            random_sleep()
-                
-        self.__postStart()
+            random_sleep()        
+        self.__postStart(start, end)
         return self.array
+
+    #根据docid下载
+    def downloadByIndex(self, indexs):
+        self.__preStart()
+        for i in indexs:
+            url = self.url.format(i["docId"])
+            res = self.__download(url)
+            if res != None:
+                self.array.append(res)
+                random_sleep()
+        return self.array
+
 
     def __trydownloaderror(self):
         urls = self.errorurl
@@ -42,11 +53,10 @@ class Crawler:
 
 
     def __preStart(self):
-#        self.count = self.__getPageCount()
         logging.info("---------start----------")
 
-    def __postStart(self):
-        totalCount = (self.end - self.start)
+    def __postStart(self, start, end):
+        totalCount = (end - start)
         if len(self.array) == totalCount:
             logging.info("--------------end-------------")
         else:
@@ -67,22 +77,26 @@ class Crawler:
 
     def __downloadi(self, page):
         url = self.url.format(page)
-        html = requests.get(url, self.header, proxies=proxies)
-        if html.status_code == 200:
-            jsonObj = json.loads(html.content)
+        content = self.__download(url)
+        if content != None:
+            jsonObj = json.loads(content)
             return jsonObj
         else:
-            logging.error(html.status_code)
-            self.errorurl.append(url)
             return None
 
     def __downloadu(self, url):
+        content = self.__download(url)
+        if content != None:
+            jsonObj = json.loads(content)
+            return jsonObj
+        else:
+            return None
+
+    def __download(self, url):
         html = requests.get(url, self.header, proxies=proxies)
         if html.status_code == 200:
-            jsonObj = json.loads(html.content)
-            return jsonObj
+            return html.content
         else:
             logging.error(html.status_code)
             self.errorurl.append(url)
             return None
-

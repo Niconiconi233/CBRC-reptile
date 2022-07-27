@@ -2,10 +2,11 @@ import pymongo
 import logging
 
 class MongoClient:
-    def __init__(self) -> None:
+    def __init__(self, place):
         self.client = pymongo.MongoClient("mongodb://localhost:27017")
         self.db = self.client["CBRC"]
-        self.col = self.db["CBRC-DATA"]
+        self.colPlace = "CBRC-DATA-" + place 
+        self.col = self.db[self.colPlace]
     
     def insertOne(self, oneData):
         x = self.col.insert_one(oneData)
