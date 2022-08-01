@@ -35,7 +35,7 @@ def calc():
 
 #保存数据到mongo，适用于增量更新
 def updateToMongo(data):
-    mongo = MongoClient()
+    mongo = MongoClient("beijing")
     for i in data:
         for j in i["data"]["rows"]:
             mongo.findAndInsert(j)
@@ -91,7 +91,7 @@ def getListInfo():
 
 def downloadAndSaveInfo():
     indexs = getListInfo()
-    piceCount = 1 #math.ceil(indexs.count() / cpuCount)
+    piceCount = math.ceil(indexs.count() / cpuCount)
     indexs = [doc for doc in indexs]
     start = 0
     end = piceCount - 1
@@ -121,8 +121,8 @@ def downloadAndSaveInfo():
 
 
 def main():
-#    judgeToDownload()
-    downloadAndSaveInfo()
+    judgeToDownload()
+#    downloadAndSaveInfo()
 
 
 

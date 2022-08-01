@@ -9,7 +9,7 @@ class BloomFilter():
         n 数据规模
         p 误判率
         '''
-        self.serializationFileName = "./data/BloomFilter-" + str(n) + "-" + str(p)
+        self.serializationFileName = "./data/BloomFilter-" + name + "-" + str(n) + "-" + str(p)
         self.bitSize = int(-n * math.log(p) / math.pow(math.log(2), 2))
         self.hashFuncSize = int(self.bitSize * math.log(2) / n)
         self.noChange = True
