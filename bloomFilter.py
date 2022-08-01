@@ -9,13 +9,16 @@ class BloomFilter():
         n 数据规模
         p 误判率
         '''
-        self.serializationFileName = "./data/BloomFilter-" + name + "-" + str(n) + "-" + str(p)
+        self.path = "./data"
+        self.serializationFileName = self.path + "/BloomFilter-" + name + "-" + str(n) + "-" + str(p) + ".bf"
         self.bitSize = int(-n * math.log(p) / math.pow(math.log(2), 2))
         self.hashFuncSize = int(self.bitSize * math.log(2) / n)
         self.noChange = True
+        self.cached = False
         if os.path.exists(self.serializationFileName):
             with open(self.serializationFileName, "rb") as f:
                 self.bitArray = pickle.load(f)
+                self.cached = True
                 print("------init bloomfilter from file--------")
         else:
             print("----------init bloomfilter-------------")
@@ -24,16 +27,17 @@ class BloomFilter():
     
     def __del__(self):
         if not self.noChange:
+            if not os.path.exists(self.path):
+                os.mkdir(self.path)
             with open(self.serializationFileName, "wb") as f:
                 pickle.dump(self.bitArray, f)
                 print("--------save bloomfilter to file----------")
 
+
     def put(self, value):
         self.valueCheck(value)
-
         hash1 = value.__hash__()
         hash2 = self.unsigned_right_shift(hash1, 16)
-
         for i in range(self.hashFuncSize):
             combineHash = hash1 + i * hash2
             if combineHash < 0:
@@ -44,7 +48,10 @@ class BloomFilter():
             self.bitArray[index] = self.bitArray[index] | (1 << position)
         self.noChange = False
 
-    def contains(self, value):
+    def fileCached(self) -> bool:
+        return self.cached
+
+    def contains(self, value) -> bool:
         self.valueCheck(value)
         hash1 = value.__hash__()
         hash2 = self.unsigned_right_shift(hash1, 16)

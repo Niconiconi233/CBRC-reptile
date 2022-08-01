@@ -13,7 +13,8 @@ HEADER = {
 
 LIST_URL = {
     "yunnan": "http://www.cbirc.gov.cn/cbircweb/DocInfo/SelectDocItemByItemPId?itemId=1954&pageSize=18&pageIndex={0}",
-    "beijing": "http://www.cbirc.gov.cn/cbircweb/DocInfo/SelectDocItemByItemPId?itemId=1855&pageSize=18&pageIndex={0}"
+    "beijing": "http://www.cbirc.gov.cn/cbircweb/DocInfo/SelectDocItemByItemPId?itemId=1855&pageSize=18&pageIndex={0}",
+    "tianjing": "http://www.cbirc.gov.cn/cbircweb/DocInfo/SelectDocItemByItemPId?itemId=1789&pageSize=18&pageIndex={0}"
 }
 
 PAGE_URL = "http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId={0}.json"

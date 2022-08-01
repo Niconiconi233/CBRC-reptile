@@ -7,6 +7,7 @@ from crawler import Crawler
 from mongo import MongoClient
 from config import LIST_URL, PAGE_URL
 
+
 count = 0
 page = 0
 cpuCount = 3
@@ -90,11 +91,15 @@ def getListInfo():
 
 
 def downloadAndSaveInfo():
+    global cpuCount
+    cpuCount = 24
     indexs = getListInfo()
-    piceCount = math.ceil(indexs.count() / cpuCount)
+    pieceCount = math.ceil(indexs.count() / cpuCount)
     indexs = [doc for doc in indexs]
+    logging.info("----------start download page info-----------")
+    logging.info("-------thread:" + str(cpuCount) + " piceCount: " + str(pieceCount) + "-------------")
     start = 0
-    end = piceCount - 1
+    end = pieceCount - 1
     for i in range(1, cpuCount + 1):
         if i != 1 and start > end:
             break
@@ -102,7 +107,7 @@ def downloadAndSaveInfo():
             end = len(indexs)
         task.put(indexs[start:end])
         start = end
-        end = end + piceCount
+        end = end + pieceCount
     
     t = MyThreadPool(cpuCount, task, cpuCount)
     t.starts(funcc)
@@ -112,8 +117,13 @@ def downloadAndSaveInfo():
     for i in range(1, len(r)):
         res_array.extend(r[i][0])
 
-    a = json.loads(res_array[0])
-    print("1")
+    #FIXME
+    array = []
+    for i in res_array:
+        array.append(i["data"])
+
+    mongo = MongoClient("beijing-info")
+    mongo.insertMany(array)
 
 
     
@@ -122,7 +132,7 @@ def downloadAndSaveInfo():
 
 def main():
     judgeToDownload()
-#    downloadAndSaveInfo()
+    downloadAndSaveInfo()
 
 
 

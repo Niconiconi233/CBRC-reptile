@@ -36,7 +36,7 @@ class Crawler:
         self.__preStart()
         for i in indexs:
             url = self.url.format(i["docId"])
-            res = self.__download(url)
+            res = self.__downloadu(url)
             if res != None:
                 self.array.append(res)
                 random_sleep()
